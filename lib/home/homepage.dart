@@ -47,9 +47,11 @@ class _HomepageState extends State<Homepage> {
     String formattedDate =
     DateFormat('EEEE d, MMMM yyyy').format(DateTime.now());
     String formattedTime = DateFormat('hh:mm a').format(DateTime.now());
+    var scrWidth = MediaQuery.of(context).size.width;
+    var scrHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(18),
+        padding:  EdgeInsets.all(scrHeight*.02),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

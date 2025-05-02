@@ -17,6 +17,9 @@ class WeatherDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var scrWidth = MediaQuery.of(context).size.width;
+    var scrHeight = MediaQuery.of(context).size.height;
+
     return Column(
       children: [
         // current address
@@ -47,7 +50,7 @@ class WeatherDetail extends StatelessWidget {
               fontWeight: FontWeight.w600,
             ),
           ),
-        const SizedBox(height: 25),
+         SizedBox(height: scrHeight*.05),
         // date and time
         Text(
           formattedDate,
@@ -65,7 +68,7 @@ class WeatherDetail extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(height: 30),
+         SizedBox(height: scrHeight*.03),
         Container(
           height: 200,
           width: 200,
@@ -75,16 +78,16 @@ class WeatherDetail extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: 30),
+        SizedBox(height: scrHeight*.03),
         // more details
         Container(
-          height: 250,
+          height: scrHeight*.265,
           decoration: BoxDecoration(
             color: Color(0xFF372367),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 10),
+            padding:  EdgeInsets.symmetric(vertical: scrWidth*.03, horizontal: scrHeight*.011),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -98,7 +101,7 @@ class WeatherDetail extends StatelessWidget {
                           Icons.wind_power,
                           color: Colors.white,
                         ),
-                        const SizedBox(height: 5),
+                         SizedBox(height: scrHeight*.02),
                         InfoCard(
                           title: "Wind",
                           value: "${weather.wind.speed} km/h",
@@ -112,7 +115,7 @@ class WeatherDetail extends StatelessWidget {
                           Icons.sunny,
                           color: Colors.white,
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: scrHeight*.02),
                         InfoCard(
                           title: "Max",
                           value:
@@ -127,7 +130,7 @@ class WeatherDetail extends StatelessWidget {
                           Icons.wind_power,
                           color: Colors.white,
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: scrHeight*.02),
                         InfoCard(
                           title: "Min",
                           value:
@@ -137,7 +140,10 @@ class WeatherDetail extends StatelessWidget {
                     ),
                   ],
                 ),
-                const Divider(),
+                 Padding(
+                   padding: EdgeInsets.symmetric(vertical: scrHeight*.0001),
+                   child: Divider(),
+                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -148,7 +154,7 @@ class WeatherDetail extends StatelessWidget {
                           Icons.water_drop,
                           color: Colors.amber,
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: scrHeight*.02),
                         InfoCard(
                           title: "Humidity",
                           value: "${weather.humidity}%",
@@ -162,7 +168,7 @@ class WeatherDetail extends StatelessWidget {
                           Icons.air,
                           color: Colors.amber,
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: scrHeight*.02),
                         InfoCard(
                           title: "Pressure",
                           value: "${weather.pressure} hPa",
@@ -176,7 +182,7 @@ class WeatherDetail extends StatelessWidget {
                           Icons.leaderboard,
                           color: Colors.amber,
                         ),
-                        const SizedBox(height: 5),
+                        SizedBox(height: scrHeight*.02),
                         InfoCard(
                           title: "Sea-Level",
                           value: "${weather.seaLevel} m",
