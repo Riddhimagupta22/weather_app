@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:weather_app/services/weather.services.dart';
+import 'package:intl/intl.dart';
 import '../Modal/modal.dart';
+import '../services/weather.services.dart';
+import 'Widgets/deatailpage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -10,114 +12,62 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  final WeatherServices _weatherServices = WeatherServices();
-  final TextEditingController _controller = TextEditingController();
-  bool _isloading = false;
+  late Weather weatherInfo;
+  bool isLoading = false;
 
-  Weather? _weather;
-  void _getWeather() async {
-    setState(() {
-      _isloading = true;
-    });
-
-    try {
-      final weather = await _weatherServices.fetchWeather(_controller.text);
+  myWeather() {
+    isLoading = false;
+    WeatherServices().fetchWeather().then((value) {
       setState(() {
-        _weather = weather as Weather?;
-        _isloading = false;
+        weatherInfo = value;
+        isLoading = true;
       });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('ERROR!  fetchinng data in a while')));
-    }
+    });
+  }
+
+  @override
+  void initState() {
+    weatherInfo = Weather(
+      name: '',
+      temperature: Temperature(current: 0.0),
+      humidity: 0,
+      wind: Wind(speed: 0.0),
+      maxTemperature: 0,
+      minTemperature: 0,
+      pressure: 0,
+      seaLevel: 0,
+      weather: [],
+    );
+    myWeather();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+    DateFormat('EEEE d, MMMM yyyy').format(DateTime.now());
+    String formattedTime = DateFormat('hh:mm a').format(DateTime.now());
     return Scaffold(
-      body: Container(
-        height: double.infinity,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          gradient: _weather != null
-              ? (_weather!.Description.toLowerCase().contains('rain')
-              ? const LinearGradient(
-              colors: [Colors.grey, Colors.blueGrey],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter)
-              : (_weather!.Description.toLowerCase().contains('clear')
-              ? const LinearGradient(
-              colors: [Colors.orangeAccent, Colors.blueAccent],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter)
-              : const LinearGradient(
-              colors: [Colors.blue, Colors.indigo],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter)))
-              : const LinearGradient(
-              colors: [Colors.blue, Colors.indigo],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 50),
-                const Text(
-                  "Weather App",
-                  style: TextStyle(
-                      fontSize: 28,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600),
-                ),
-                const SizedBox(height: 30),
-                TextField(
-                  controller: _controller,
-                  decoration: InputDecoration(
-                    hintText: 'Enter city',
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 10),
-                ElevatedButton(
-                  onPressed: _getWeather,
-                  child: _isloading
-                      ? const SizedBox(
-                    height: 20,
-                    width: 20,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                      strokeWidth: 2,
-                    ),
-                  )
-                      : const Text('Get Weather'),
-                ),
-                const SizedBox(height: 20),
-                if (_weather != null) ...[
-                  Text(
-                    'City: ${_weather!.CityName}',
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  Text(
-                    'Temperature: ${_weather!.temp}°C',
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                  Text(
-                    'Description: ${_weather!.Description}',
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  ),
-                ],
-              ],
+      body: Padding(
+        padding: const EdgeInsets.all(18),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Center(
+              child: isLoading
+                  ? WeatherDetail(
+                weather: weatherInfo,
+                formattedDate: formattedDate,
+                formattedTime: formattedTime,
+              )
+                  : const CircularProgressIndicator(
+                color: Colors.white,
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
 }
+
